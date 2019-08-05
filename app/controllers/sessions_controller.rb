@@ -6,9 +6,9 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
      log_in user
-     remember user
-     redirect_to user  
-     # ログイン後にユーザー情報ページにリダイレクトします 
+     params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+     redirect_back_or user  
+    
     else
      # ここにはエラーメッセージ用のflashを入れます。
      flash.now[:danger] = '認証に失敗しました。'
